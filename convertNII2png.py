@@ -22,7 +22,7 @@ iterador = 1
 (listaSubjectsAD,listaDescriptionAD,listaSubjectsMCI,listaDescriptionMCI,listaSubjectsCN,listaDescriptionCN) = obterSubjectsDescription()
 
 for subject, description in zip(listaSubjectsAD,listaDescriptionAD):
-	folder = 'Images/'+classes[0]+'/'+subject+'/'+formatarDescription(description)+'/'
+	folder = '../Images/'+classes[0]+'/'+subject+'/'+formatarDescription(description)+'/'
 	file = base+'_'+subject+'_'+tipo+'_'+formatarDescription(description)+formato
 	arquivo = nib.load(folder+file)
 	image = arquivo.get_data()

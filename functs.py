@@ -3,7 +3,7 @@ import string
 import csv
 
 def obterSubjectsDescription():
-	files = ['Images/Alzheimer_Disease_6_12_2018.csv','Images/Cognitively_Normal_6_06_2018.csv','Images/Mild_Cognitive_Impairment_6_08_2018.csv']
+	files = ['../Images/Alzheimer_Disease_6_12_2018.csv','../Images/Cognitively_Normal_6_06_2018.csv','../Images/Mild_Cognitive_Impairment_6_08_2018.csv']
 
 	listaSubjectsAD = []
 	listaDescriptionAD = []
