@@ -12,7 +12,7 @@ classes = ['AD','CN','MCI']
 base = 'ADNI'
 tipo = 'MR'
 formato = '.nii'
-iterador = 1
+iterador = 0
 
 #Diretorios
 #Images/classe/subject/description/
@@ -26,11 +26,18 @@ for subject, description in zip(listaSubjectsAD,listaDescriptionAD):
 	file = base+'_'+subject+'_'+tipo+'_'+formatarDescription(description)+formato
 	arquivo = nib.load(folder+file)
 	image = arquivo.get_data()
-	segmento = image[:,(image.shape[1] // 2),:]
-	plt.imshow(segmento,cmap='gray')
-	plt.title('Imagem - ' + str(iterador))
-	iterador += 1
-	plt.waitforbuttonpress()
+	segmentos = image[:,(image.shape[1] // 2):(image.shape[1] // 2)+50,:]
+	diretorio = '../Output/Images/'+classes[0]+'/'+subject+'/'
+	if not os.path.exists(diretorio):
+		os.makedirs(diretorio)
+	for i in range(50):
+		plt.imsave(diretorio+'img'+str(iterador)+'.png',arr=segmentos[:,i,:],cmap='gray')
+		iterador += 1
+	iterador = 0
+	#plt.imshow(segmento,cmap='gray')
+	#plt.title('Imagem - ' + str(iterador))
+	#iterador += 1
+	#plt.waitforbuttonpress()
 
 #formatarDescription(listaDescriptionAD[0]))
 
