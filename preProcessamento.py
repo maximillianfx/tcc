@@ -23,7 +23,15 @@ iterador = 0
 
 
 img = cv.imread(diretorio+classes[0]+'/'+listaSubjectsAD[0]+'/img0.png',0)
+blur = cv.medianBlur(img,3)
+alpha = 1.2
+beta = 0
+contraste = cv.addWeighted(blur,alpha,np.zeros(blur.shape,blur.dtype),0,beta)
 cv.namedWindow('AD', cv.WINDOW_NORMAL)
+cv.namedWindow('AD-Blur', cv.WINDOW_NORMAL)
+cv.namedWindow('AD-Blur-Contraste', cv.WINDOW_NORMAL)
 cv.imshow('AD',img)
+cv.imshow('AD-Blur',blur)
+cv.imshow('AD-Blur-Contraste',contraste)
 cv.waitKey(0)
 cv.destroyAllWindows()
