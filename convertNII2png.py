@@ -71,22 +71,3 @@ print('Conversoes finalizadas!')
 	#plt.title('Imagem - ' + str(iterador))
 	#iterador += 1
 	#plt.waitforbuttonpress()
-
-#formatarDescription(listaDescriptionAD[0]))
-
-#print("Conversao de imagens NII para PNG")
-#img = nib.load('002_s_0938_ad.nii')
-#image = img.get_data()
-#print(img.header)
-
-#print(image.shape)
-
-#print (image.shape[1] // 2)
-######slices = image[:,(image.shape[1] // 2),:]
-#soma = sum(sum(slice_1))
-#linhas,colunas = slice_1.shape
-#print(soma/(linhas*colunas))
-#print(slice_1.shape)
-#print(slices.shape)
-#plt.imshow(slices,cmap='gray')
-#plt.show()
