@@ -1,0 +1,24 @@
+Classes de doença de Alzheimer:
+
+1 - Saudável - Cognitively Normal (CN)
+2 - Distúrbio Cognitivo Leve - Mild Cognitive Impairment (MCI)
+2.1 - Distúrbio Cognitivo Leve Primitivo - Early Mild Cognitive Impairment
+2.2 - Distúrbio Cognitivo Leve Avançado - Late Mild Cognitive Impairment
+3 - Doente - Alzheimer Disease (AD)
+
+Pesquisa na base ADNI:
+
+ADNI
+ADNI1
+
+CN
+
+MPR; GradWarp; B1 Correction; N3
+MRI
+
+T1
+
+IMAGE VOLUME
+BRAIN
+
+Ordenar por descrição para obter 1 amostra de cada paciente
