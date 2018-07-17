@@ -22,7 +22,7 @@ iterador = 0
 (listaSubjectsAD,listaDescriptionAD,listaSubjectsMCI,listaDescriptionMCI,listaSubjectsCN,listaDescriptionCN) = obterSubjectsDescription()
 
 
-img = cv.imread(diretorio+classes[0]+'/'+listaSubjectsAD[0]+'/img0.png',0)
+img = cv.imread(diretorio+classes[0]+'/' + '0-'+listaSubjectsAD[0]+'/img0.jpg',0)
 blur = cv.medianBlur(img,3)
 alpha = 1.2
 beta = 0
