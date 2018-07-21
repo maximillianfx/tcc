@@ -12,12 +12,24 @@ from keras.layers.convolutional import *
 from matplotlib import pyplot as plt
 from sklearn.metrics import confusion_matrix
 import matplotlib.pyplot as plt
+import os
+
+import tensorflow as tf
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+
+config = tf.ConfigProto(intra_op_parallelism_threads=24,inter_op_parallelism_threads=2, allow_soft_placement=True,device_count = {'CPU': 24 })
+session = tf.Session(config=config)
+K.set_session(session)
+os.environ["OMP_NUM_THREADS"] = "24"
+os.environ["KMP_BLOCKTIME"] = "30"
+os.environ["KMP_SETTINGS"] = "1"
+os.environ["KMP_AFFINITY"]= "granularity=fine,verbose,compact,1,0"
 
 train_path = 'dataset/train'
 valid_path = 'dataset/valid'
 test_path = 'dataset/test'
-input_shape = (224,224,3)
-target_size = (224,224)
+input_shape = (200,130,3)
+target_size = (200,130)
 
 def plots(ims,figsize=(12,6),rows=1,interp=False,titles=None):
 	if type(ims[0]) is np.ndarray:
@@ -36,36 +48,37 @@ def plots(ims,figsize=(12,6),rows=1,interp=False,titles=None):
 
 
 if __name__ == "__main__":
-	train_batches = ImageDataGenerator().flow_from_directory(train_path,target_size=target_size,classes=['ad','mci','nc'],batch_size=10)
-	valid_batches = ImageDataGenerator().flow_from_directory(valid_path,target_size=target_size,classes=['ad','mci','nc'],batch_size=10)
-	test_batches = ImageDataGenerator().flow_from_directory(test_path,target_size=target_size,classes=['ad','mci','nc'],batch_size=10)
+	os.system('cls' if os.name == 'nt' else 'clear')
+	train_batches = ImageDataGenerator().flow_from_directory(train_path,target_size=target_size,classes=['ad','mci','nc'],batch_size=36)
+	valid_batches = ImageDataGenerator().flow_from_directory(valid_path,target_size=target_size,classes=['ad','mci','nc'],batch_size=24)
+	test_batches = ImageDataGenerator().flow_from_directory(test_path,target_size=target_size,classes=['ad','mci','nc'],batch_size=24)
 
 	#imgs,labels = next(train_batches)
 	#plots(imgs,titles=labels)
-	#model = Sequential([
-			#Conv2D(,(3,3),activation='relu',input_shape=input_shape),
-			#Conv2D(32,(3,3),activation='relu'),
-			#MaxPooling2D(pool_size=(2,2)),
-			#Dropout(0.25),
-			#Flatten(),
-			#Dense(3,activation='softmax'),
-		#])
+	model = Sequential([
+		Conv2D(32, kernel_size=(3, 3),activation='relu',input_shape=input_shape),
+		MaxPooling2D(pool_size=(2, 2)),
+		Dropout(0.25),
+		Flatten(),
+		Dropout(0.5),
+		Dense(3, activation='softmax')
+	])
 
 
-	vgg16 = keras.applications.vgg16.VGG16()
-	model = Sequential()
-	for layer in vgg16.layers:
-		model.add(layer)
+	#vgg16 = keras.applications.vgg16.VGG16()
+	#model = Sequential()
+	#for layer in vgg16.layers:
+		#model.add(layer)
 
-	model.layers.pop()
-	for layer in model.layers:
-		layer.trainable = False
+	#model.layers.pop()
+	#for layer in model.layers:
+		#layer.trainable = False
 
-	model.add(Dense(3,activation='softmax'))
+	#model.add(Dense(3,activation='softmax'))
 	print("Resumo do modelo")
 	print(model.summary())
 
 	model.compile(loss=keras.losses.categorical_crossentropy,
               optimizer=keras.optimizers.Adadelta(),
               metrics=['accuracy'])
-	model.fit_generator(train_batches,steps_per_epoch=150,validation_data=valid_batches,validation_steps=50,epochs=20,verbose=1)
+	model.fit_generator(train_batches,steps_per_epoch=100,validation_data=valid_batches,validation_steps=50,epochs=18,verbose=1)
