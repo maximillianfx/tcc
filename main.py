@@ -28,8 +28,8 @@ os.environ["KMP_AFFINITY"]= "granularity=fine,verbose,compact,1,0"
 train_path = 'dataset/train'
 valid_path = 'dataset/valid'
 test_path = 'dataset/test'
-input_shape = (200,130,3)
-target_size = (200,130)
+input_shape = (224,224,3)
+target_size = (224,224)
 
 def plots(ims,figsize=(12,6),rows=1,interp=False,titles=None):
 	if type(ims[0]) is np.ndarray:
@@ -60,7 +60,6 @@ if __name__ == "__main__":
 		MaxPooling2D(pool_size=(2, 2)),
 		Dropout(0.25),
 		Flatten(),
-		Dropout(0.5),
 		Dense(3, activation='softmax')
 	])
 
@@ -81,4 +80,5 @@ if __name__ == "__main__":
 	model.compile(loss=keras.losses.categorical_crossentropy,
               optimizer=keras.optimizers.Adadelta(),
               metrics=['accuracy'])
-	model.fit_generator(train_batches,steps_per_epoch=100,validation_data=valid_batches,validation_steps=50,epochs=18,verbose=1)
+	model.fit_generator(train_batches,steps_per_epoch=100,validation_data=valid_batches,validation_steps=50,epochs=1,verbose=1)
+	model.predict_generator(test_batches,steps=1,verbose=2)
