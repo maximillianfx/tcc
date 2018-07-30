@@ -65,6 +65,10 @@ tamanho_imagem = (166,256)
 
 tamanho_final = (224,224)
 
+CANNY = True
+THRESHOLD_LOW = 80
+THRESHOLD_HIGH = 150
+
 #Diretorios
 #Images/classe/subject/description/
 #Arquivos
@@ -140,7 +144,11 @@ for itemListaAD_Train in seq_ad_train:
 			CROPPED = True
 		cropped = resized_image[alturaInicio:alturaInicio+alturaFim,larguraInicio:larguraInicio+larguraFim]
 		resized_image_final = cv2.resize(cropped, tamanho_final)
-		cv2.imwrite(diretorioTrain+'img'+ str(iterador)+'.jpg',resized_image_final)
+		if CANNY:
+			edges = cv2.Canny(resized_image_final,THRESHOLD_LOW,THRESHOLD_HIGH)
+			cv2.imwrite(diretorioTrain+'img'+ str(iterador)+'.jpg',edges)
+		else:
+			cv2.imwrite(diretorioTrain+'img'+ str(iterador)+'.jpg',resized_image_final)
 		iterador += 1
 for itemListaAD_Valid in seq_ad_valid:
 	CROPPED = False
@@ -192,7 +200,11 @@ for itemListaAD_Valid in seq_ad_valid:
 			CROPPED = True
 		cropped = resized_image[alturaInicio:alturaInicio+alturaFim,larguraInicio:larguraInicio+larguraFim]
 		resized_image_final = cv2.resize(cropped, tamanho_final)
-		cv2.imwrite(diretorioValid+'img'+ str(iterador)+'.jpg',resized_image_final)
+		if CANNY:
+			edges = cv2.Canny(resized_image_final,THRESHOLD_LOW,THRESHOLD_HIGH)
+			cv2.imwrite(diretorioValid+'img'+ str(iterador)+'.jpg',edges)
+		else:
+			cv2.imwrite(diretorioValid+'img'+ str(iterador)+'.jpg',resized_image_final)
 		iterador += 1
 for itemListaAD_Test in seq_ad_test:
 	CROPPED = False
@@ -212,7 +224,7 @@ for itemListaAD_Test in seq_ad_test:
 		outros.append(paciente+str(iteradorPacientes))
 
 	iteradorPacientes += 1
-	
+
 	start,end = getStartEnd(image.shape[1])
 	segmentos = image[:,start:end,:]
 	for i in range(RANGE):
@@ -244,7 +256,11 @@ for itemListaAD_Test in seq_ad_test:
 			CROPPED = True
 		cropped = resized_image[alturaInicio:alturaInicio+alturaFim,larguraInicio:larguraInicio+larguraFim]
 		resized_image_final = cv2.resize(cropped, tamanho_final)
-		cv2.imwrite(diretorioTest+'img'+ str(iterador)+'.jpg',resized_image_final)
+		if CANNY:
+			edges = cv2.Canny(resized_image_final,THRESHOLD_LOW,THRESHOLD_HIGH)
+			cv2.imwrite(diretorioTest+'img'+ str(iterador)+'.jpg',edges)
+		else:
+			cv2.imwrite(diretorioTest+'img'+ str(iterador)+'.jpg',resized_image_final)
 		iterador += 1
 
 print('Conversao OK')
@@ -274,7 +290,7 @@ for itemListaCN_Train in seq_cn_train:
 		outros.append(paciente+str(iteradorPacientes))
 
 	iteradorPacientes += 1
-	
+
 	start,end = getStartEnd(image.shape[1])
 	segmentos = image[:,start:end,:]
 	for i in range(RANGE):
@@ -306,7 +322,11 @@ for itemListaCN_Train in seq_cn_train:
 			CROPPED = True
 		cropped = resized_image[alturaInicio:alturaInicio+alturaFim,larguraInicio:larguraInicio+larguraFim]
 		resized_image_final = cv2.resize(cropped, tamanho_final)
-		cv2.imwrite(diretorioTrain+'img'+ str(iterador)+'.jpg',resized_image_final)
+		if CANNY:
+			edges = cv2.Canny(resized_image_final,THRESHOLD_LOW,THRESHOLD_HIGH)
+			cv2.imwrite(diretorioTrain+'img'+ str(iterador)+'.jpg',edges)
+		else:
+			cv2.imwrite(diretorioTrain+'img'+ str(iterador)+'.jpg',resized_image_final)
 		iterador += 1
 for itemListaCN_Valid in seq_cn_valid:
 	CROPPED = False
@@ -326,7 +346,7 @@ for itemListaCN_Valid in seq_cn_valid:
 		outros.append(paciente+str(iteradorPacientes))
 
 	iteradorPacientes += 1
-	
+
 	start,end = getStartEnd(image.shape[1])
 	segmentos = image[:,start:end,:]
 	for i in range(RANGE):
@@ -358,7 +378,11 @@ for itemListaCN_Valid in seq_cn_valid:
 			CROPPED = True
 		cropped = resized_image[alturaInicio:alturaInicio+alturaFim,larguraInicio:larguraInicio+larguraFim]
 		resized_image_final = cv2.resize(cropped, tamanho_final)
-		cv2.imwrite(diretorioValid+'img'+ str(iterador)+'.jpg',resized_image_final)
+		if CANNY:
+			edges = cv2.Canny(resized_image_final,THRESHOLD_LOW,THRESHOLD_HIGH)
+			cv2.imwrite(diretorioValid+'img'+ str(iterador)+'.jpg',edges)
+		else:
+			cv2.imwrite(diretorioValid+'img'+ str(iterador)+'.jpg',resized_image_final)
 		iterador += 1
 for itemListaCN_Test in seq_cn_test:
 	CROPPED = False
@@ -378,7 +402,7 @@ for itemListaCN_Test in seq_cn_test:
 		outros.append(paciente+str(iteradorPacientes))
 
 	iteradorPacientes += 1
-	
+
 	start,end = getStartEnd(image.shape[1])
 	segmentos = image[:,start:end,:]
 	for i in range(RANGE):
@@ -410,7 +434,11 @@ for itemListaCN_Test in seq_cn_test:
 			CROPPED = True
 		cropped = resized_image[alturaInicio:alturaInicio+alturaFim,larguraInicio:larguraInicio+larguraFim]
 		resized_image_final = cv2.resize(cropped, tamanho_final)
-		cv2.imwrite(diretorioTest+'img'+ str(iterador)+'.jpg',resized_image_final)
+		if CANNY:
+			edges = cv2.Canny(resized_image_final,THRESHOLD_LOW,THRESHOLD_HIGH)
+			cv2.imwrite(diretorioTest+'img'+ str(iterador)+'.jpg',edges)
+		else:
+			cv2.imwrite(diretorioTest+'img'+ str(iterador)+'.jpg',resized_image_final)
 		iterador += 1
 
 print('Conversao OK')
@@ -440,7 +468,7 @@ for itemListaMCI_Train in seq_mci_train:
 		outros.append(paciente+str(iteradorPacientes))
 
 	iteradorPacientes += 1
-	
+
 	start,end = getStartEnd(image.shape[1])
 	segmentos = image[:,start:end,:]
 	for i in range(RANGE):
@@ -472,7 +500,11 @@ for itemListaMCI_Train in seq_mci_train:
 			CROPPED = True
 		cropped = resized_image[alturaInicio:alturaInicio+alturaFim,larguraInicio:larguraInicio+larguraFim]
 		resized_image_final = cv2.resize(cropped, tamanho_final)
-		cv2.imwrite(diretorioTrain+'img'+ str(iterador)+'.jpg',resized_image_final)
+		if CANNY:
+			edges = cv2.Canny(resized_image_final,THRESHOLD_LOW,THRESHOLD_HIGH)
+			cv2.imwrite(diretorioTrain+'img'+ str(iterador)+'.jpg',edges)
+		else:
+			cv2.imwrite(diretorioTrain+'img'+ str(iterador)+'.jpg',resized_image_final)
 		iterador += 1
 for itemListaMCI_Valid in seq_mci_valid:
 	CROPPED = False
@@ -492,7 +524,7 @@ for itemListaMCI_Valid in seq_mci_valid:
 		outros.append(paciente+str(iteradorPacientes))
 
 	iteradorPacientes += 1
-	
+
 	start,end = getStartEnd(image.shape[1])
 	segmentos = image[:,start:end,:]
 	for i in range(RANGE):
@@ -524,7 +556,11 @@ for itemListaMCI_Valid in seq_mci_valid:
 			CROPPED = True
 		cropped = resized_image[alturaInicio:alturaInicio+alturaFim,larguraInicio:larguraInicio+larguraFim]
 		resized_image_final = cv2.resize(cropped, tamanho_final)
-		cv2.imwrite(diretorioValid+'img'+ str(iterador)+'.jpg',resized_image_final)
+		if CANNY:
+			edges = cv2.Canny(resized_image_final,THRESHOLD_LOW,THRESHOLD_HIGH)
+			cv2.imwrite(diretorioValid+'img'+ str(iterador)+'.jpg',edges)
+		else:
+			cv2.imwrite(diretorioValid+'img'+ str(iterador)+'.jpg',resized_image_final)
 		iterador += 1
 for itemListaMCI_Test in seq_mci_test:
 	CROPPED = False
@@ -544,7 +580,7 @@ for itemListaMCI_Test in seq_mci_test:
 		outros.append(paciente+str(iteradorPacientes))
 
 	iteradorPacientes += 1
-	
+
 	start,end = getStartEnd(image.shape[1])
 	segmentos = image[:,start:end,:]
 	for i in range(RANGE):
@@ -576,7 +612,11 @@ for itemListaMCI_Test in seq_mci_test:
 			CROPPED = True
 		cropped = resized_image[alturaInicio:alturaInicio+alturaFim,larguraInicio:larguraInicio+larguraFim]
 		resized_image_final = cv2.resize(cropped, tamanho_final)
-		cv2.imwrite(diretorioTest+'img'+ str(iterador)+'.jpg',resized_image_final)
+		if CANNY:
+			edges = cv2.Canny(resized_image_final,THRESHOLD_LOW,THRESHOLD_HIGH)
+			cv2.imwrite(diretorioTest+'img'+ str(iterador)+'.jpg',edges)
+		else:
+			cv2.imwrite(diretorioTest+'img'+ str(iterador)+'.jpg',resized_image_final)
 		iterador += 1
 
 print('Conversoes finalizadas!')
