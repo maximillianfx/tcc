@@ -8,14 +8,19 @@ from keras import optimizers
 from keras.metrics import categorical_crossentropy
 from keras.preprocessing.image import ImageDataGenerator
 from keras.layers.normalization import BatchNormalization
+from keras import regularizers
 from keras.layers.convolutional import *
+from keras.utils import plot_model
 from matplotlib import pyplot as plt
 from sklearn.metrics import confusion_matrix
 import matplotlib.pyplot as plt
 import os
+import string
+import ipdb
 
 import tensorflow as tf
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+np.random.seed(0)
 
 config = tf.ConfigProto(intra_op_parallelism_threads=24,inter_op_parallelism_threads=2, allow_soft_placement=True,device_count = {'CPU': 24 })
 session = tf.Session(config=config)
@@ -25,43 +30,48 @@ os.environ["KMP_BLOCKTIME"] = "30"
 os.environ["KMP_SETTINGS"] = "1"
 os.environ["KMP_AFFINITY"]= "granularity=fine,verbose,compact,1,0"
 
-train_path = 'dataset/train'
-valid_path = 'dataset/valid'
-test_path = 'dataset/test'
+train_path = 'dataset-cropped-nedge/train'
+valid_path = 'dataset-cropped-nedge/valid'
+test_path = 'dataset-cropped-nedge/test'
+DATA_SET_EXECUTE = ['ORIGINAL','CROPPED_WITHOUT_EDGE','CROPPED_EDGE']
+NUMERO_EPOCHS = 1
 input_shape = (224,224,3)
 target_size = (224,224)
-
-def plots(ims,figsize=(12,6),rows=1,interp=False,titles=None):
-	if type(ims[0]) is np.ndarray:
-		ims = np.array(ims).astype(np.uint8)
-		if (ims.shape[-1] != 3):
-			ims = ims.transpose ((0,2,3,1))
-	f = plt.figure(figsize=figsize)
-	cols = len(ims)//rows if len(ims) % 2 == 0 else len(ims)//rows + 1
-	for i in range(len(ims)):
-		sp = f.add_subplot(rows,cols,i+1)
-		sp.axis('Off')
-		if titles is not None:
-			sp.set_title(titles[i],fontsize=16)
-		plt.imshow(ims[i],interpolation=None if interp else 'none')
-	plt.waitforbuttonpress()
 
 
 if __name__ == "__main__":
 	os.system('cls' if os.name == 'nt' else 'clear')
-	train_batches = ImageDataGenerator().flow_from_directory(train_path,target_size=target_size,classes=['ad','mci','nc'],batch_size=36)
-	valid_batches = ImageDataGenerator().flow_from_directory(valid_path,target_size=target_size,classes=['ad','mci','nc'],batch_size=24)
-	test_batches = ImageDataGenerator().flow_from_directory(test_path,target_size=target_size,classes=['ad','mci','nc'],batch_size=24)
+	train_batches = ImageDataGenerator().flow_from_directory(train_path,shuffle=False,target_size=target_size,classes=['ad','mci','nc'],batch_size=36)
+	valid_batches = ImageDataGenerator().flow_from_directory(valid_path,shuffle=False,target_size=target_size,classes=['ad','mci','nc'],batch_size=24)
+	test_batches = ImageDataGenerator().flow_from_directory(test_path,shuffle=False,target_size=target_size,classes=['ad','mci','nc'],batch_size=24)
 
 	#imgs,labels = next(train_batches)
 	#plots(imgs,titles=labels)
 	model = Sequential([
-		Conv2D(32, kernel_size=(3, 3),activation='relu',input_shape=input_shape),
+		Conv2D(8, kernel_size=(3, 3),padding='same',input_shape=input_shape, kernel_regularizer=regularizers.l2(0.01)),
+		BatchNormalization(),
+		Activation('relu'),
 		MaxPooling2D(pool_size=(2, 2)),
-		Dropout(0.25),
+		#Conv2D(16, kernel_size=(3, 3),padding='same', kernel_regularizer=regularizers.l2(0.01)),
+		#BatchNormalization(),
+		#Activation('relu'),
+		#MaxPooling2D(pool_size=(2, 2)),
+		#Conv2D(32, kernel_size=(3, 3),padding='same', kernel_regularizer=regularizers.l2(0.01),trainable=False),
+		#Activation('relu'),
+		#Conv2D(50, kernel_size=(3, 3),padding='same', kernel_regularizer=regularizers.l2(0.01),trainable=False),
+		#Activation('relu'),
+		#MaxPooling2D(pool_size=(2, 2)),
+		#Conv2D(50, kernel_size=(3, 3),padding='same', kernel_regularizer=regularizers.l2(0.01),trainable=False),
+		#Activation('relu'),
+		#Conv2D(50, kernel_size=(3, 3),padding='same', kernel_regularizer=regularizers.l2(0.01),trainable=False),
+		#Activation('relu'),
+		#MaxPooling2D(pool_size=(2, 2)),
 		Flatten(),
+		#Dense(100,activation='softmax',trainable=False),
 		Dense(3, activation='softmax')
 	])
+
+	print(DATA_SET_EXECUTE[1])
 
 
 	#vgg16 = keras.applications.vgg16.VGG16()
@@ -77,8 +87,55 @@ if __name__ == "__main__":
 	print("Resumo do modelo")
 	print(model.summary())
 
+	#Criacao de imagem contendo o modelo utilizado
+	#plot_model(model,show_shapes=True,to_file='model.png')
+
+	#Compilacao da rede
 	model.compile(loss=keras.losses.categorical_crossentropy,
               optimizer=keras.optimizers.Adadelta(),
-              metrics=['accuracy'])
-	model.fit_generator(train_batches,steps_per_epoch=100,validation_data=valid_batches,validation_steps=50,epochs=1,verbose=1)
-	model.predict_generator(test_batches,steps=1,verbose=2)
+              metrics=['accuracy','mse'])
+	
+	#Etapa de treinamento
+	history = model.fit_generator(train_batches,steps_per_epoch=100,validation_data=valid_batches,validation_steps=50,epochs=NUMERO_EPOCHS,verbose=1)
+	
+	f = open('plots/history.txt','w')
+	#Criacao do grafico com epochs do treinamento
+	f.write(str(history.history['acc']))
+	f.close()
+	#plt.plot(history.history['acc'])
+	#plt.title('Acuracia no treinamento')
+	#plt.ylabel('Acuracia - %')
+	#plt.xlabel('Epoch')
+
+	#plt.savefig('history.png')
+	
+	#Etapa de teste
+	pred = model.predict_generator(test_batches,verbose=1)
+	pred = np.argmax(pred,axis=1)
+	pred = np.expand_dims(pred,axis=1)
+	pred = pred.reshape(1200,)
+	error = np.sum(np.not_equal(pred,test_batches.classes)) / test_batches.samples
+
+	f = open('plots/error.txt','w')
+	#Criacao do grafico com epochs do treinamento
+	f.write(str(error)+"%")
+	f.close()
+
+	## Compute confusion matrix
+	cnf_matrix = confusion_matrix(test_batches.classes, pred)
+	#np.set_printoptions(precision=2)
+	f = open('plots/cm.txt','w')
+	#Criacao do grafico com epochs do treinamento
+	f.write(str(cnf_matrix))
+	f.close()
+
+	# Plot non-normalized confusion matrix
+	#plt.figure()
+	#plot_confusion_matrix(cnf_matrix, classes=['ad','mci','nc'],title='Confusion matrix, without normalization')
+	#plt.savefig('confusion.png')
+	# Plot normalized confusion matrix
+	#plt.figure()
+	#plot_confusion_matrix(cnf_matrix, classes=['ad','mci','nc'], normalize=True,title='Normalized confusion matrix')
+	#plt.savefig('confusion_normalized.png')
+	#error = np.sum(np.not_equal(pred,y_test)) / y_test.shape[0]
+	#print("Taxa de erro: " + error + "%")
