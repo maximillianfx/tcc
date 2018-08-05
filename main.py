@@ -34,7 +34,7 @@ train_path = 'dataset-cropped-nedge/train'
 valid_path = 'dataset-cropped-nedge/valid'
 test_path = 'dataset-cropped-nedge/test'
 DATA_SET_EXECUTE = ['ORIGINAL','CROPPED_WITHOUT_EDGE','CROPPED_EDGE']
-NUMERO_EPOCHS = 1
+NUMERO_EPOCHS = 50
 input_shape = (224,224,3)
 target_size = (224,224)
 
@@ -48,26 +48,36 @@ if __name__ == "__main__":
 	#imgs,labels = next(train_batches)
 	#plots(imgs,titles=labels)
 	model = Sequential([
-		Conv2D(8, kernel_size=(3, 3),padding='same',input_shape=input_shape, kernel_regularizer=regularizers.l2(0.01)),
+		Conv2D(16, kernel_size=(3, 3),padding='same',input_shape=input_shape, kernel_regularizer=regularizers.l2(0.01)),
 		BatchNormalization(),
 		Activation('relu'),
+		Conv2D(16, kernel_size=(3, 3),padding='same'),
+		Activation('relu'),
 		MaxPooling2D(pool_size=(2, 2)),
-		#Conv2D(16, kernel_size=(3, 3),padding='same', kernel_regularizer=regularizers.l2(0.01)),
-		#BatchNormalization(),
-		#Activation('relu'),
-		#MaxPooling2D(pool_size=(2, 2)),
-		#Conv2D(32, kernel_size=(3, 3),padding='same', kernel_regularizer=regularizers.l2(0.01),trainable=False),
-		#Activation('relu'),
-		#Conv2D(50, kernel_size=(3, 3),padding='same', kernel_regularizer=regularizers.l2(0.01),trainable=False),
-		#Activation('relu'),
-		#MaxPooling2D(pool_size=(2, 2)),
-		#Conv2D(50, kernel_size=(3, 3),padding='same', kernel_regularizer=regularizers.l2(0.01),trainable=False),
-		#Activation('relu'),
-		#Conv2D(50, kernel_size=(3, 3),padding='same', kernel_regularizer=regularizers.l2(0.01),trainable=False),
-		#Activation('relu'),
-		#MaxPooling2D(pool_size=(2, 2)),
+		Conv2D(32, kernel_size=(3, 3),padding='same'),
+		Activation('relu'),
+		Conv2D(32, kernel_size=(3, 3),padding='same',trainable=False),
+		Activation('relu'),
+		Conv2D(32, kernel_size=(3, 3),padding='same',trainable=False),
+		Activation('relu'),
+		MaxPooling2D(pool_size=(2, 2)),
+		Conv2D(50, kernel_size=(3, 3),padding='same'),
+		Activation('relu'),
+		Conv2D(50, kernel_size=(3, 3),padding='same',trainable=False),
+		Activation('relu'),
+		Conv2D(50, kernel_size=(3, 3),padding='same',trainable=False),
+		Activation('relu'),
+		MaxPooling2D(pool_size=(2, 2)),
+		Conv2D(100, kernel_size=(3, 3),padding='same'),
+		Activation('relu'),
+		Conv2D(100, kernel_size=(3, 3),padding='same',trainable=False),
+		Activation('relu'),
+		Conv2D(100, kernel_size=(3, 3),padding='same',trainable=False),
+		Activation('relu'),
+		MaxPooling2D(pool_size=(2, 2)),
 		Flatten(),
-		#Dense(100,activation='softmax',trainable=False),
+		Dense(300,activation='softmax',trainable=False),
+		Dense(100,activation='softmax',trainable=False),
 		Dense(3, activation='softmax')
 	])
 
