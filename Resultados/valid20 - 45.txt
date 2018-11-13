@@ -1,0 +1,24 @@
+valid 20 - 45
+train 48 - 100
+test 5
+
+
+4 - 2
+8 - 4
+
+2 - 4
+4 - 4
+0.4 drops
+
+deu certo eh o 4, 
+[[184  16][
+ 89  11]]
+
+ DIMINUIR LR
+
+ -----------------------------------------------------------------------
+
+ dobrei batch size
+ batch menor, lr menor - alcancei 66,4% - vggfinalrun.py, 30 epochs, 0.005 de lr, cmvgg-coronal-run1.txt
+ lr menor - nao
+ dropout de 0.45
